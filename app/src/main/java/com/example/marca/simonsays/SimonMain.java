@@ -1,6 +1,5 @@
 package com.example.marca.simonsays;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -29,7 +28,7 @@ public class SimonMain extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gam_layout);
+        setContentView(R.layout.game_layout);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbarCanvas);
         setSupportActionBar(myToolbar);
         drawEmptyLayout();
@@ -67,21 +66,20 @@ public class SimonMain extends AppCompatActivity {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.BLACK);
-        canvas.drawCircle(width/2, height/2, width/2, paint);
+        //paint.setColor(Color.BLACK);
+        //canvas.drawCircle(width/2, height/2, width/2, paint);
         paint.setColor(Color.RED);
         Path lRed = new Path();
-        float x = width/2, y = height/2, r = width/4, angle = 50;
-        //lRed.moveTo((width/8)*3,(height/8)*5);
-        lRed.arcTo(new RectF(x, y-r, x+2*r, y+r),180,angle);
-        lRed.lineTo((float) (x - r * (1 - Math.cos(Math.toRadians(angle)))), (float) (y - r * Math.sin(Math.toRadians(angle))));
-        lRed.arcTo(new RectF(x - 2 * r, y - r, x, y + r), -angle, angle);
-        lRed.close();
-        /*Path mPath = new Path();
+        lRed.addRect(new RectF(width/5,0,(width/5)*4,(height/6)-50),Path.Direction.CW);
+        Path sRed = new Path();
+        sRed.addRect(new RectF((width/5)*2,height/6,(width/5)*3,((height/6)*2)-50),Path.Direction.CW);
+
+       /*Path mPath = new Path();
         mPath.moveTo((width/8)*3,(height/3)*2);
         mPath.addArc((width/8)*3,(height/3)*2,(width/8)*3+50,(height/3)*2+50,0,360);
         canvas.drawPath(mPath,paint);*/
         canvas.drawPath(lRed,paint);
+        canvas.drawPath(sRed,paint);
         i.setImageBitmap(bitmap);
     }
     public void drawCanvas(){
