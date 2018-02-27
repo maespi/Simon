@@ -73,13 +73,29 @@ public class SimonMain extends AppCompatActivity {
         lRed.addRect(new RectF(width/5,0,(width/5)*4,(height/6)-50),Path.Direction.CW);
         Path sRed = new Path();
         sRed.addRect(new RectF((width/5)*2,height/6,(width/5)*3,((height/6)*2)-50),Path.Direction.CW);
+        Path lBlue = new Path();
+        lBlue.addRect(new RectF(0,height/6,((width/5)-50),(height/6)*4),Path.Direction.CW);
+        Path sBlue = new Path();
+        sBlue.addRect(new RectF(width/5,(height/6)*2 ,((width/5)*2)-25,(height/6)*3),Path.Direction.CW);
+        Path lGreen = new Path();
+        lGreen.addRect(new RectF(((width/5)*4)+50,height/6 ,width,(height/6)*4),Path.Direction.CW);
+        Path sGreen = new Path();
+        sGreen.addRect(new RectF(((width/5)*3)+25,(height/6)*2 ,(width/5)*4,(height/6)*3),Path.Direction.CW);
+        Path lMagenta = new Path();
+        lRed.addRect(new RectF(width/5,((height/6)*5)+50,(width/5)*4,height),Path.Direction.CW);
+        Path sMagenta = new Path();
+        sRed.addRect(new RectF((width/5)*2,height/6,(width/5)*3,((height/6)*2)-50),Path.Direction.CW);
 
-       /*Path mPath = new Path();
-        mPath.moveTo((width/8)*3,(height/3)*2);
-        mPath.addArc((width/8)*3,(height/3)*2,(width/8)*3+50,(height/3)*2+50,0,360);
-        canvas.drawPath(mPath,paint);*/
         canvas.drawPath(lRed,paint);
         canvas.drawPath(sRed,paint);
+        paint.setColor(Color.BLUE);
+        canvas.drawPath(lBlue,paint);
+        canvas.drawPath(sBlue,paint);
+        paint.setColor(Color.GREEN);
+        canvas.drawPath(lGreen,paint);
+        canvas.drawPath(sGreen,paint);
+        paint.setColor(Color.MAGENTA);
+        canvas.drawPath(lMagenta,paint);
         i.setImageBitmap(bitmap);
     }
     public void drawCanvas(){
