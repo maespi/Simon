@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,8 +13,10 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * Created by marca on 26/02/2018.
@@ -31,7 +32,7 @@ public class SimonMain extends AppCompatActivity {
         setContentView(R.layout.game_layout);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbarCanvas);
         setSupportActionBar(myToolbar);
-        drawEmptyLayout();
+        configLayoutStart();
     }
 
     @Override
@@ -54,7 +55,19 @@ public class SimonMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void drawEmptyLayout(){
+    public boolean onTouchEvent(MotionEvent event) {
+        System.out.println(event.getAction());
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN: {
+                System.out.println("X:" + (int) event.getX() + "& Y:" + (int) event.getY());
+            }
+        }
+        Toast.makeText(this, "View is clicked", Toast.LENGTH_LONG).show();
+        return true;
+    }
+
+
+    public void configLayoutStart(){
         Point size = new Point();
         mLinearLayout = new LinearLayout(this);
         Display display = getWindowManager().getDefaultDisplay();
@@ -62,29 +75,20 @@ public class SimonMain extends AppCompatActivity {
 
         display.getSize(size);
         int width = size.x;
-        int height = size.y;
+        int height = size.y-(size.y/7)+((size.y/7)/8);
+        Figures.setSimonPaths(width,height);
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        //paint.setColor(Color.BLACK);
-        //canvas.drawCircle(width/2, height/2, width/2, paint);
         paint.setColor(Color.RED);
-        Path lRed = new Path();
-        lRed.addRect(new RectF(width/5,0,(width/5)*4,(height/6)-50),Path.Direction.CW);
-        Path sRed = new Path();
-        sRed.addRect(new RectF((width/5)*2,height/6,(width/5)*3,((height/6)*2)-50),Path.Direction.CW);
-        Path lBlue = new Path();
-        lBlue.addRect(new RectF(0,height/6,((width/5)-50),(height/6)*4),Path.Direction.CW);
-        Path sBlue = new Path();
-        sBlue.addRect(new RectF(width/5,(height/6)*2 ,((width/5)*2)-25,(height/6)*3),Path.Direction.CW);
-        Path lGreen = new Path();
-        lGreen.addRect(new RectF(((width/5)*4)+50,height/6 ,width,(height/6)*4),Path.Direction.CW);
-        Path sGreen = new Path();
-        sGreen.addRect(new RectF(((width/5)*3)+25,(height/6)*2 ,(width/5)*4,(height/6)*3),Path.Direction.CW);
-        Path lMagenta = new Path();
-        lRed.addRect(new RectF(width/5,((height/6)*5)+50,(width/5)*4,height),Path.Direction.CW);
-        Path sMagenta = new Path();
-        sRed.addRect(new RectF((width/5)*2,height/6,(width/5)*3,((height/6)*2)-50),Path.Direction.CW);
+        Path lRed = Figures.getlRed();
+        Path sRed = Figures.getsRed();
+        Path lBlue = Figures.getlBlue();
+        Path sBlue = Figures.getsBlue();
+        Path lGreen = Figures.getlGreen();
+        Path sGreen = Figures.getsGreen();
+        Path lMagenta = Figures.getlGray();
+        Path sGray = Figures.getsGray();
 
         canvas.drawPath(lRed,paint);
         canvas.drawPath(sRed,paint);
@@ -94,9 +98,12 @@ public class SimonMain extends AppCompatActivity {
         paint.setColor(Color.GREEN);
         canvas.drawPath(lGreen,paint);
         canvas.drawPath(sGreen,paint);
-        paint.setColor(Color.MAGENTA);
+        paint.setColor(Color.LTGRAY);
         canvas.drawPath(lMagenta,paint);
+        canvas.drawPath(sGray,paint);
         i.setImageBitmap(bitmap);
+
+        //i.onTouchEvent();
     }
     public void drawCanvas(){
 
