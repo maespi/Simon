@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -22,7 +23,7 @@ import android.widget.Toast;
  * Created by marca on 26/02/2018.
  */
 
-public class SimonMain extends AppCompatActivity {
+public class SimonMain extends AppCompatActivity implements View.OnTouchListener {
 
     public LinearLayout mLinearLayout;
 
@@ -55,58 +56,64 @@ public class SimonMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean onTouchEvent(MotionEvent event) {
-        System.out.println(event.getAction());
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                System.out.println("X:" + (int) event.getX() + "& Y:" + (int) event.getY());
-            }
-        }
-        Toast.makeText(this, "View is clicked", Toast.LENGTH_LONG).show();
-        return true;
-    }
-
-
     public void configLayoutStart(){
         Point size = new Point();
         mLinearLayout = new LinearLayout(this);
         Display display = getWindowManager().getDefaultDisplay();
         ImageView i = (ImageView)findViewById(R.id.imageCanvas);
-
         display.getSize(size);
         int width = size.x;
         int height = size.y-(size.y/7)+((size.y/7)/8);
-        Figures.setSimonPaths(width,height);
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.RED);
-        Path lRed = Figures.getlRed();
-        Path sRed = Figures.getsRed();
-        Path lBlue = Figures.getlBlue();
-        Path sBlue = Figures.getsBlue();
-        Path lGreen = Figures.getlGreen();
-        Path sGreen = Figures.getsGreen();
-        Path lMagenta = Figures.getlGray();
-        Path sGray = Figures.getsGray();
+        Figures.drawCleanLayout(width,height,i);
 
-        canvas.drawPath(lRed,paint);
-        canvas.drawPath(sRed,paint);
-        paint.setColor(Color.BLUE);
-        canvas.drawPath(lBlue,paint);
-        canvas.drawPath(sBlue,paint);
-        paint.setColor(Color.GREEN);
-        canvas.drawPath(lGreen,paint);
-        canvas.drawPath(sGreen,paint);
-        paint.setColor(Color.LTGRAY);
-        canvas.drawPath(lMagenta,paint);
-        canvas.drawPath(sGray,paint);
-        i.setImageBitmap(bitmap);
-
-        //i.onTouchEvent();
+        i.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                int action = motionEvent.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        System.out.println("X:" + (int) motionEvent.getX() + "& Y:" + (int) motionEvent.getY());
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        break;
+                    case MotionEvent.ACTION_UP:;
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        break;
+                    default:
+                        break;
+                }
+                if (Figures.getRlGreen().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                    Toast.makeText(getApplicationContext(), "Green Large Area", Toast.LENGTH_SHORT).show();
+                }else if (Figures.getRsGreen().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                    Toast.makeText(getApplicationContext(), "Green Short Area", Toast.LENGTH_SHORT).show();
+                }
+                //Toast.makeText(getApplicationContext(), "X:" + (int) motionEvent.getX() + "& Y:" + (int) motionEvent.getY(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
     public void drawCanvas(){
 
     }
 
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        int action = motionEvent.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                System.out.println("X:" + (int) motionEvent.getX() + "& Y:" + (int) motionEvent.getY());
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:;
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                break;
+            default:
+                break;
+        }
+        Toast.makeText(this, "View is clicked", Toast.LENGTH_LONG).show();
+        return true;
+    }
 }
