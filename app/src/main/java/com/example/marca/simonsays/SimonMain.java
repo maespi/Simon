@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -60,7 +61,7 @@ public class SimonMain extends AppCompatActivity implements View.OnTouchListener
         Point size = new Point();
         mLinearLayout = new LinearLayout(this);
         Display display = getWindowManager().getDefaultDisplay();
-        ImageView i = (ImageView)findViewById(R.id.imageCanvas);
+        final ImageView i = (ImageView)findViewById(R.id.imageCanvas);
         display.getSize(size);
         int width = size.x;
         int height = size.y-(size.y/7)+((size.y/7)/8);
@@ -85,16 +86,33 @@ public class SimonMain extends AppCompatActivity implements View.OnTouchListener
                 }
                 if (Figures.getRlGreen().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
                     Toast.makeText(getApplicationContext(), "Green Large Area", Toast.LENGTH_SHORT).show();
+                    Paint paint = new Paint();
+                    paint.setColor(Color.BLUE);
+                    paint.setAntiAlias(true);
+                    paint.setStrokeWidth(15);
+                    paint.setStyle(Paint.Style.STROKE);
+                    Bitmap btm = ((BitmapDrawable)i.getDrawable()).getBitmap();
+                    Canvas canvas = new Canvas(btm);
+                    canvas.drawPath(Figures.getlGreen(),paint);
+
                 }else if (Figures.getRsGreen().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
                     Toast.makeText(getApplicationContext(), "Green Short Area", Toast.LENGTH_SHORT).show();
+                }else if (Figures.getRlRed().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                    Toast.makeText(getApplicationContext(), "Red Long Area", Toast.LENGTH_SHORT).show();
+                }else if (Figures.getRsRed().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                    Toast.makeText(getApplicationContext(), "Red Short Area", Toast.LENGTH_SHORT).show();
+                }else if (Figures.getRlBlue().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                    Toast.makeText(getApplicationContext(), "Blue Long Area", Toast.LENGTH_SHORT).show();
+                }else if (Figures.getRsBlue().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                    Toast.makeText(getApplicationContext(), "Blue Short Area", Toast.LENGTH_SHORT).show();
+                }else if (Figures.getRlGray().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                    Toast.makeText(getApplicationContext(), "Gray Long Area", Toast.LENGTH_SHORT).show();
+                }else if (Figures.getRsGray().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                    Toast.makeText(getApplicationContext(), "Gray Short Area", Toast.LENGTH_SHORT).show();
                 }
-                //Toast.makeText(getApplicationContext(), "X:" + (int) motionEvent.getX() + "& Y:" + (int) motionEvent.getY(), Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
-    }
-    public void drawCanvas(){
-
     }
 
     @Override
