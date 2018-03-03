@@ -1,5 +1,6 @@
 package com.example.marca.simonsays;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -57,17 +58,20 @@ public class SimonMain extends AppCompatActivity implements View.OnTouchListener
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public void configLayoutStart(){
         Point size = new Point();
         mLinearLayout = new LinearLayout(this);
         Display display = getWindowManager().getDefaultDisplay();
-        final ImageView i = (ImageView)findViewById(R.id.imageCanvas);
+        ImageView i = (ImageView)findViewById(R.id.imageCanvas);
         display.getSize(size);
         int width = size.x;
         int height = size.y-(size.y/7)+((size.y/7)/8);
         Figures.drawCleanLayout(width,height,i);
 
+
         i.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 int action = motionEvent.getAction();
@@ -77,38 +81,40 @@ public class SimonMain extends AppCompatActivity implements View.OnTouchListener
                         break;
                     case MotionEvent.ACTION_MOVE:
                         break;
-                    case MotionEvent.ACTION_UP:;
+                    case MotionEvent.ACTION_UP:
+                        view.performClick();
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         break;
                     default:
                         break;
                 }
+
                 if (Figures.getRlGreen().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    Toast.makeText(getApplicationContext(), "Green Large Area", Toast.LENGTH_SHORT).show();
-                    Paint paint = new Paint();
-                    paint.setColor(Color.BLUE);
-                    paint.setAntiAlias(true);
-                    paint.setStrokeWidth(15);
-                    paint.setStyle(Paint.Style.STROKE);
-                    Bitmap btm = ((BitmapDrawable)i.getDrawable()).getBitmap();
-                    Canvas canvas = new Canvas(btm);
-                    canvas.drawPath(Figures.getlGreen(),paint);
+                    //Toast.makeText(getApplicationContext(), "Green Large Area", Toast.LENGTH_SHORT).show();
+                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.GREEN,Figures.getlGreen());
 
                 }else if (Figures.getRsGreen().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    Toast.makeText(getApplicationContext(), "Green Short Area", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Green Short Area", Toast.LENGTH_SHORT).show();
+                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.GREEN,Figures.getsGreen());
                 }else if (Figures.getRlRed().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    Toast.makeText(getApplicationContext(), "Red Long Area", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Red Long Area", Toast.LENGTH_SHORT).show();
+                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getlRed());
                 }else if (Figures.getRsRed().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    Toast.makeText(getApplicationContext(), "Red Short Area", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Red Short Area", Toast.LENGTH_SHORT).show();
+                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getsRed());
                 }else if (Figures.getRlBlue().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    Toast.makeText(getApplicationContext(), "Blue Long Area", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Blue Long Area", Toast.LENGTH_SHORT).show();
+                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getlBlue());
                 }else if (Figures.getRsBlue().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    Toast.makeText(getApplicationContext(), "Blue Short Area", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Blue Short Area", Toast.LENGTH_SHORT).show();
+                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getsBlue());
                 }else if (Figures.getRlGray().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    Toast.makeText(getApplicationContext(), "Gray Long Area", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Gray Long Area", Toast.LENGTH_SHORT).show();
+                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getlGray());
                 }else if (Figures.getRsGray().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    Toast.makeText(getApplicationContext(), "Gray Short Area", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Gray Short Area", Toast.LENGTH_SHORT).show();
+                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getsGray());
                 }
                 return true;
             }

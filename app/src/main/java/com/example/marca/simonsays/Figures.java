@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
@@ -129,7 +130,7 @@ public class Figures extends AppCompatActivity{
         Figures.sGray = sGray;
     }
 
-    public static void setSimonPaths(int width, int height ){
+    public static void setSimonVariables(int width, int height ){
         Path lRed = new Path();
         RectF rectF = new RectF(width/5,0,(width/5)*4,(height/6)-50);
         lRed.addRect(rectF,Path.Direction.CW);
@@ -181,7 +182,7 @@ public class Figures extends AppCompatActivity{
 
     public static void drawCleanLayout(int width, int height, ImageView i){
 
-        Figures.setSimonPaths(width,height);
+        Figures.setSimonVariables(width,height);
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -207,5 +208,17 @@ public class Figures extends AppCompatActivity{
         canvas.drawPath(lMagenta,paint);
         canvas.drawPath(sGray,paint);
         i.setImageBitmap(bitmap);
+    }
+
+    public static void selectFigure(ImageView img, int color, Path mPath){
+        Paint paint = new Paint();
+        paint.setColor(color);
+        paint.setAntiAlias(true);
+        paint.setStrokeWidth(15);
+        paint.setStyle(Paint.Style.STROKE);
+        Bitmap btm = ((BitmapDrawable) img.getDrawable()).getBitmap();
+        Canvas canvas = new Canvas(btm);
+        canvas.drawPath(mPath,paint);
+        img.setImageBitmap(btm);
     }
 }
