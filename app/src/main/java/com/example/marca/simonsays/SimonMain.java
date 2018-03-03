@@ -25,7 +25,7 @@ import android.widget.Toast;
  * Created by marca on 26/02/2018.
  */
 
-public class SimonMain extends AppCompatActivity implements View.OnTouchListener {
+public class SimonMain extends AppCompatActivity {
 
     public LinearLayout mLinearLayout;
 
@@ -36,6 +36,8 @@ public class SimonMain extends AppCompatActivity implements View.OnTouchListener
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbarCanvas);
         setSupportActionBar(myToolbar);
         configLayoutStart();
+        Game myGame = new Game(5,0,(ImageView)findViewById(R.id.imageCanvas));
+        myGame.startPlay();
     }
 
     @Override
@@ -58,7 +60,7 @@ public class SimonMain extends AppCompatActivity implements View.OnTouchListener
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+
     public void configLayoutStart(){
         Point size = new Point();
         mLinearLayout = new LinearLayout(this);
@@ -119,25 +121,5 @@ public class SimonMain extends AppCompatActivity implements View.OnTouchListener
                 return true;
             }
         });
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        int action = motionEvent.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                System.out.println("X:" + (int) motionEvent.getX() + "& Y:" + (int) motionEvent.getY());
-                break;
-            case MotionEvent.ACTION_MOVE:
-                break;
-            case MotionEvent.ACTION_UP:;
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                break;
-            default:
-                break;
-        }
-        Toast.makeText(this, "View is clicked", Toast.LENGTH_LONG).show();
-        return true;
     }
 }
