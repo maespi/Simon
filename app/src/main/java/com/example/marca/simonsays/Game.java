@@ -43,10 +43,6 @@ public class Game{
 
     public void startPlay(){
         aJugades[nTorn-1]=randomSelectPatterns();
-        for (int a :
-                aJugades) {
-            System.out.println(a);
-        }
         començarRondaSimon();
     }
 
