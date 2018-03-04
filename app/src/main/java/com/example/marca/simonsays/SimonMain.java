@@ -8,7 +8,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
@@ -17,9 +21,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by marca on 26/02/2018.
@@ -28,6 +35,10 @@ import android.widget.Toast;
 public class SimonMain extends AppCompatActivity {
 
     public LinearLayout mLinearLayout;
+    public Game myGame;
+    private int Coounter,nTorns;
+    private ImageView canvas;
+    private int[] bJugades;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +46,20 @@ public class SimonMain extends AppCompatActivity {
         setContentView(R.layout.game_layout);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbarCanvas);
         setSupportActionBar(myToolbar);
+
+        nTorns = 5;
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        int width = size.x;
+        int height = size.y-(size.y/7)+((size.y/7)/8);
+        Figures.setSimonVariables(width,height);
         configLayoutStart();
-        Game myGame = new Game(5,0,(ImageView)findViewById(R.id.imageCanvas));
-        myGame.startPlay();
+        canvas = (ImageView)findViewById(R.id.imageCanvas);
+        myGame = new Game(nTorns,0,canvas, width, height);
+        bJugades = new int[nTorns];
+        Coounter=1;
+
+        canvas.setOnTouchListener(Touchable);
     }
 
     @Override
@@ -60,6 +82,91 @@ public class SimonMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    View.OnTouchListener nonTouchable = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            return false;
+        }
+    };
+
+    View.OnTouchListener Touchable = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            int action = motionEvent.getAction();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    if (Figures.getRlGreen().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                        bJugades[Coounter-1]=0;
+                        Figures.selectFigure(canvas,Color.GREEN,Figures.getlGreen());
+                    }else if (Figures.getRsGreen().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                        bJugades[Coounter-1]=1;
+                        Figures.selectFigure(canvas,Color.GREEN,Figures.getsGreen());
+                    }else if (Figures.getRlRed().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                        bJugades[Coounter-1]=2;
+                        Figures.selectFigure(canvas,Color.RED,Figures.getlRed());
+                    }else if (Figures.getRsRed().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                        //Toast.makeText(getApplicationContext(), "Red Short Area", Toast.LENGTH_SHORT).show();
+                        bJugades[Coounter-1]=3;
+                        Figures.selectFigure(canvas,Color.RED,Figures.getsRed());
+                    }else if (Figures.getRlBlue().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                        bJugades[Coounter-1]=4;
+                        Figures.selectFigure(canvas,Color.BLUE,Figures.getlBlue());
+                    }else if (Figures.getRsBlue().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                        bJugades[Coounter-1]=5;
+                        Figures.selectFigure(canvas,Color.BLUE,Figures.getsBlue());
+                    }else if (Figures.getRlGray().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                        bJugades[Coounter-1]=6;
+                        Figures.selectFigure(canvas,Color.GRAY,Figures.getlGray());
+                    }else if (Figures.getRsGray().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
+                        bJugades[Coounter-1]=7;
+                        Figures.selectFigure(canvas,Color.GRAY,Figures.getsGray());
+                    }else {Coounter--;}
+                    Coounter++;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    break;
+                case MotionEvent.ACTION_UP:
+                    configLayoutStart();
+                    if (Coounter>myGame.getnTorn()) {
+                        int[] solutions = myGame.getaJugades();
+                        int count = 0;
+                        for (int a :
+                                bJugades) {
+                            System.out.print(a);
+                            System.out.println(solutions[count]);
+                            if (a != solutions[count])
+                                return false; //Falta implementar la funcio per a guardar les dades!!
+                            count++;
+                        }
+                        canvas.setOnTouchListener(nonTouchable);
+
+                        Coounter = 1;
+                        myGame.setnTorn(myGame.getnTorn() + 1);
+                        Game.simonTurnCanvasAnimation a = myGame.new simonTurnCanvasAnimation();
+                        a.execute();
+                        try {
+                            System.out.println("Sleep");
+                            Thread.sleep(2000*(myGame.getnTorn())+1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println("Hii");
+                        canvas.setOnTouchListener(Touchable);
+
+                    }
+                    view.performClick();
+                    break;
+
+                case MotionEvent.ACTION_CANCEL:
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+    };
+
+
 
     public void configLayoutStart(){
         Point size = new Point();
@@ -70,56 +177,5 @@ public class SimonMain extends AppCompatActivity {
         int width = size.x;
         int height = size.y-(size.y/7)+((size.y/7)/8);
         Figures.drawCleanLayout(width,height,i);
-
-
-        i.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        System.out.println("X:" + (int) motionEvent.getX() + "& Y:" + (int) motionEvent.getY());
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        view.performClick();
-                        break;
-                    case MotionEvent.ACTION_CANCEL:
-                        break;
-                    default:
-                        break;
-                }
-
-                if (Figures.getRlGreen().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    //Toast.makeText(getApplicationContext(), "Green Large Area", Toast.LENGTH_SHORT).show();
-                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.GREEN,Figures.getlGreen());
-
-                }else if (Figures.getRsGreen().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    //Toast.makeText(getApplicationContext(), "Green Short Area", Toast.LENGTH_SHORT).show();
-                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.GREEN,Figures.getsGreen());
-                }else if (Figures.getRlRed().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    //Toast.makeText(getApplicationContext(), "Red Long Area", Toast.LENGTH_SHORT).show();
-                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getlRed());
-                }else if (Figures.getRsRed().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    //Toast.makeText(getApplicationContext(), "Red Short Area", Toast.LENGTH_SHORT).show();
-                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getsRed());
-                }else if (Figures.getRlBlue().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    //Toast.makeText(getApplicationContext(), "Blue Long Area", Toast.LENGTH_SHORT).show();
-                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getlBlue());
-                }else if (Figures.getRsBlue().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    //Toast.makeText(getApplicationContext(), "Blue Short Area", Toast.LENGTH_SHORT).show();
-                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getsBlue());
-                }else if (Figures.getRlGray().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    //Toast.makeText(getApplicationContext(), "Gray Long Area", Toast.LENGTH_SHORT).show();
-                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getlGray());
-                }else if (Figures.getRsGray().contains((int)motionEvent.getX(),(int)motionEvent.getY())){
-                    //Toast.makeText(getApplicationContext(), "Gray Short Area", Toast.LENGTH_SHORT).show();
-                    Figures.selectFigure((ImageView)findViewById(R.id.imageCanvas),Color.RED,Figures.getsGray());
-                }
-                return true;
-            }
-        });
     }
 }

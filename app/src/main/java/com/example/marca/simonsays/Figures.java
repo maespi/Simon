@@ -8,6 +8,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
@@ -181,8 +182,6 @@ public class Figures extends AppCompatActivity{
     }
 
     public static void drawCleanLayout(int width, int height, ImageView i){
-
-        Figures.setSimonVariables(width,height);
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -214,7 +213,7 @@ public class Figures extends AppCompatActivity{
         Paint paint = new Paint();
         paint.setColor(color);
         paint.setAntiAlias(true);
-        paint.setStrokeWidth(15);
+        paint.setStrokeWidth(30);
         paint.setStyle(Paint.Style.STROKE);
         Bitmap btm = ((BitmapDrawable) img.getDrawable()).getBitmap();
         Canvas canvas = new Canvas(btm);
